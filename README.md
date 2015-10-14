@@ -1,6 +1,6 @@
 # lnetlib: C++ network library
 
-lnetlib (or lightweight network library) is a small C++ header-only network library with
+lnetlib (or lightweight network library) is a small C++ network library with
 simple API for quick development network applications. This library is based on non-Boost
 Asio and has written on modern C++11.
 
