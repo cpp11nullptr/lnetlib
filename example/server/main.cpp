@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
 	encryption->set_verify_mode(lnetlib::ssl_verify_peer | lnetlib::ssl_verify_fail_if_no_peer_cert);
 	encryption->set_enabled(true);
 
-	server.start(7777);
+	server.start("127.0.0.1", 7777);
 
 	char cmd = 0;
 	bool loop = true;

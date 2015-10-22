@@ -66,6 +66,7 @@ namespace lnetlib
 		using error_code = asio::error_code;
 		using service = asio::io_service;
 		using tcp = asio::ip::tcp;
+		using address = asio::ip::address;
 
 		lsignal::signal<void(std::shared_ptr<connection>)> connected;
 		lsignal::signal<void(std::shared_ptr<connection>)> disconnected;
@@ -80,7 +81,7 @@ namespace lnetlib
 
 		std::shared_ptr<encryption> encryption_info() const;
 
-		void start(int port);
+		void start(const std::string& addr, int port);
 		void stop();
 
 		std::list<std::shared_ptr<connection>> connections();

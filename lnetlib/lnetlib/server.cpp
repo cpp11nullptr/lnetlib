@@ -59,7 +59,7 @@ namespace lnetlib
 		return _encryption;
 	}
 
-	void server::start(int port)
+	void server::start(const std::string& addr, int port)
 	{
 		if (_running)
 		{
@@ -73,7 +73,7 @@ namespace lnetlib
 			return;
 		}
 
-		_endpoint = tcp::endpoint(tcp::v4(), port);
+		_endpoint = tcp::endpoint(address::from_string(addr), port);
 
 		try
 		{
