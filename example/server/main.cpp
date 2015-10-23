@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
 		case Command::Message:
 			{
 				auto response = stream->create_response();
-				(*response) << "ready, steady, go!\n";
+				response->write_string("ready\nsteady\ngo!\n");
 				response->send();
 
 				break;
@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
 			for (auto conn : server.connections())
 			{
 				auto stream = conn->create_stream(Command::Hello);
-				(*stream) << "I'm server!\n";
+				stream->write_string("I'm server!\n");
 			}
 
 			break;
@@ -119,9 +119,6 @@ int main(int argc, char *argv[])
 
 				std::string filename;
 				std::cin >> filename;
-
-				uint64_t filename_size;
-				filename_size = filename.size();
 
 				std::ifstream fstream(filename, std::ios::binary | std::ios::ate);
 
@@ -144,11 +141,8 @@ int main(int argc, char *argv[])
 				{
 					auto stream = conn->create_stream(Command::SendFile);
 
-					stream->write(reinterpret_cast<const char*>(&filename_size), sizeof(uint64_t));
-					stream->write(filename.data(), filename_size);
-
-					stream->write(reinterpret_cast<const char*>(&size), sizeof(uint64_t));
-					stream->write(bytes.data(), bytes.size());
+					stream->write_string(filename);
+					stream->write_data_chunk(bytes);
 
 					std::cout << "file sended\n";
 					std::cout.flush();

@@ -54,6 +54,30 @@ namespace lnetlib
 
 		uint64_t uid() const;
 
+		int8_t read_int8();
+		uint8_t read_uint8();
+
+		int16_t read_int16();
+		uint16_t read_uint16();
+
+		int32_t read_int32();
+		uint32_t read_uint32();
+
+		int64_t read_int64();
+		uint64_t read_uint64();
+
+		float read_float32();
+		double read_float64();
+
+		template<typename T = uint64_t>
+		std::string read_string();
+
+		template<typename T = uint64_t>
+		const char* read_data_chunk(T& size);
+
+		template<typename T = uint64_t>
+		std::vector<char> read_data_chunk();
+
 		std::unique_ptr<ostream> create_response();
 
 	private:
@@ -61,12 +85,58 @@ namespace lnetlib
 		uint64_t _uid;
 		uint64_t _command;
 
+		template<typename T>
+		T read_basic();
+
 	};
 
 	template<typename T>
 	T istream::command() const
 	{
 		return static_cast<T>(_command);
+	}
+
+	template<typename T>
+	std::string istream::read_string()
+	{
+		T size = read_basic<T>();
+
+		char data[size];
+		read(data, size);
+
+		return std::string(data, 0, size);
+	}
+
+	template<typename T>
+	const char* istream::read_data_chunk(T& size)
+	{
+		size = read_basic<T>();
+
+		char *data = new char[size];
+		read(data, size);
+
+		return data;
+	}
+
+	template<typename T>
+	std::vector<char> istream::read_data_chunk()
+	{
+		T size = read_basic<T>();
+
+		std::vector<char> chunk(size);
+		read(chunk.data(), chunk.size());
+
+		return chunk;
+	}
+
+	template<typename T>
+	T istream::read_basic()
+	{
+		T data;
+
+		read(reinterpret_cast<char*>(&data), sizeof(T));
+
+		return data;
 	}
 }
 

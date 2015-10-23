@@ -48,8 +48,7 @@ int main(int argc, char *argv[])
 		{
 		case Command::Hello:
 			{
-				std::string msg;
-				std::getline(*stream, msg);
+				std::string msg = stream->read_string();
 
 				std::cout << "server says: hello, " << msg << "\n";
 				std::cout.flush();
@@ -67,19 +66,8 @@ int main(int argc, char *argv[])
 
 		case Command::SendFile:
 			{
-				uint64_t filename_size;
-				stream->read(reinterpret_cast<char*>(&filename_size), sizeof(uint64_t));
-
-				char filename[filename_size + 1];
-				stream->read(filename, filename_size);
-				filename[filename_size] = '\0';
-
-				uint64_t size;
-				stream->read(reinterpret_cast<char*>(&size), sizeof(uint64_t));
-
-				std::vector<char> bytes;
-				bytes.resize(size);
-				stream->read(bytes.data(), bytes.size());
+				std::string filename = stream->read_string();
+				std::vector<char> bytes = stream->read_data_chunk();
 
 				std::ofstream fstream(filename, std::ios::binary | std::ios::out);
 				fstream.write(bytes.data(), bytes.size());
@@ -141,8 +129,7 @@ int main(int argc, char *argv[])
 			{
 				auto callback = [](std::unique_ptr<lnetlib::istream> stream)
 				{
-					std::string msg;
-					std::getline(*stream, msg);
+					std::string msg = stream->read_string();
 
 					std::cout << "callback message: " << msg << "\n";
 					std::cout.flush();
