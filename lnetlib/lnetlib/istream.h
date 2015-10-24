@@ -72,11 +72,11 @@ namespace lnetlib
 		template<typename T = uint64_t>
 		std::string read_string();
 
-		template<typename T = uint64_t>
-		const char* read_data_chunk(T& size);
+		template<typename T = char, typename U = uint64_t>
+		const T* read_data_chunk(U& size);
 
-		template<typename T = uint64_t>
-		std::vector<char> read_data_chunk();
+		template<typename T = char, typename U = uint64_t>
+		std::vector<T> read_data_chunk();
 
 		std::unique_ptr<ostream> create_response();
 
@@ -107,24 +107,24 @@ namespace lnetlib
 		return std::string(data, 0, size);
 	}
 
-	template<typename T>
-	const char* istream::read_data_chunk(T& size)
+	template<typename T, typename U>
+	const T* istream::read_data_chunk(U& size)
 	{
-		size = read_basic<T>();
+		size = read_basic<U>();
 
-		char *data = new char[size];
-		read(data, size);
+		T *data = new char[size];
+		read(reinterpret_cast<char*>(data), size * sizeof(T));
 
 		return data;
 	}
 
-	template<typename T>
-	std::vector<char> istream::read_data_chunk()
+	template<typename T, typename U>
+	std::vector<T> istream::read_data_chunk()
 	{
-		T size = read_basic<T>();
+		U size = read_basic<U>();
 
-		std::vector<char> chunk(size);
-		read(chunk.data(), chunk.size());
+		std::vector<T> chunk(size);
+		read(reinterpret_cast<char*>(chunk.data()), chunk.size() * sizeof(T));
 
 		return chunk;
 	}

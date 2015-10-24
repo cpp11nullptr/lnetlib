@@ -71,11 +71,11 @@ namespace lnetlib
 		template<typename T = uint64_t>
 		void write_string(const std::string& data);
 
-		template<typename T = uint64_t>
-		void write_data_chunk(const char *data, T size);
+		template<typename T = char, typename U = uint64_t>
+		void write_data_chunk(const T *data, U size);
 
-		template<typename T = uint64_t>
-		void write_data_chunk(const std::vector<char>& data);
+		template<typename T = char, typename U = uint64_t>
+		void write_data_chunk(const std::vector<T>& data);
 
 		void send();
 
@@ -114,17 +114,17 @@ namespace lnetlib
 		write(data.data(), data.size());
 	}
 
-	template<typename T>
-	void ostream::write_data_chunk(const char *data, T size)
+	template<typename T, typename U>
+	void ostream::write_data_chunk(const T *data, U size)
 	{
-		write_basic<T>(size);
-		write(data, size);
+		write_basic<U>(size);
+		write(reinterpret_cast<const char*>(data), size * sizeof(T));
 	}
 
-	template<typename T>
-	void ostream::write_data_chunk(const std::vector<char>& data)
+	template<typename T, typename U>
+	void ostream::write_data_chunk(const std::vector<T>& data)
 	{
-		write_data_chunk(data.data(), static_cast<T>(data.size()));
+		write_data_chunk(reinterpret_cast<const char*>(data.data()), static_cast<U>(data.size()));
 	}
 }
 
