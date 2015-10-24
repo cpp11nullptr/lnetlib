@@ -141,4 +141,3 @@ namespace lnetlib
 }
 
 #endif // LNETLIB_ISTREAM_H
-

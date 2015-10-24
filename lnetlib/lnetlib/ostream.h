@@ -40,7 +40,7 @@ namespace lnetlib
 {
 	class ostream
 		: public std::ostream
-	{	
+	{
 	public:
 		using stream_buffer = asio::streambuf;
 
@@ -124,9 +124,8 @@ namespace lnetlib
 	template<typename T, typename U>
 	void ostream::write_data_chunk(const std::vector<T>& data)
 	{
-		write_data_chunk(reinterpret_cast<const char*>(data.data()), static_cast<U>(data.size()));
+		write_data_chunk<T, U>(data.data(), data.size());
 	}
 }
 
 #endif // LNETLIB_OUT_STREAM_H
-
