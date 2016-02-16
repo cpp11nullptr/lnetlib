@@ -29,12 +29,10 @@ SOFTWARE.
 namespace lnetlib
 {
 	istream::istream(std::shared_ptr<stream_buffer> buffer)
-		: _buffer(buffer)
+		: std::istream(buffer.get()), _buffer(buffer)
 	{
-		init(_buffer.get());
-
-		this->read(reinterpret_cast<char*>(&_command), sizeof(uint64_t));
 		this->read(reinterpret_cast<char*>(&_uid), sizeof(uint64_t));
+		this->read(reinterpret_cast<char*>(&_command), sizeof(uint64_t));
 	}
 
 	istream::~istream()

@@ -97,8 +97,8 @@ namespace lnetlib
 
 		uint64_t cmd = static_cast<uint64_t>(command);
 
-		this->write(reinterpret_cast<const char*>(&cmd), sizeof(uint64_t));
 		this->write(reinterpret_cast<const char*>(&uid), sizeof(uint64_t));
+		this->write(reinterpret_cast<const char*>(&cmd), sizeof(uint64_t));
 	}
 
 	template<typename T>
